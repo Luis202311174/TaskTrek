@@ -175,7 +175,7 @@ export class TasktrekComponent implements OnInit, OnDestroy {
   }
 
   startEdit(task: any) {
-    console.log('EDIT TASK OBJECT:', task);
+    console.log('edit log:', task);
     this.editingTask = task;
 
     this.task = {
@@ -230,7 +230,7 @@ export class TasktrekComponent implements OnInit, OnDestroy {
 
   async deleteTask(task: any) {
     if (!task.task_id) {
-      console.error('Missing task_id', task);
+      console.error('missing task_id', task);
       return;
     }
 

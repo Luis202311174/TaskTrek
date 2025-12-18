@@ -67,13 +67,8 @@
       <span>Due: {{ t.task_due_date }}</span>
 
       <div class="flex gap-2 mt-2">
-        <button
-          (click)="startEdit(t)"
-          class="px-2 py-1 bg-yellow-400 text-white rounded text-sm">Edit</button>
-
-        <button
-          (click)="deleteTask(t)"
-          class="px-2 py-1 bg-red-500 text-white rounded text-sm">Delete</button>
+        <button (click)="startEdit(t)"class="px-2 py-1 bg-yellow-400 text-white rounded text-sm">Edit</button>
+        <button (click)="deleteTask(t)" class="px-2 py-1 bg-red-500 text-white rounded text-sm">Delete</button>
       </div>
     </div>
 
