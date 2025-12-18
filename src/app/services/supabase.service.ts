@@ -20,8 +20,35 @@ export class SupabaseService {
     return this.supabase.auth.signInWithPassword({ email, password });
   }
 
+  signUp(email: string, password: string, firstName: string, lastName: string) {
+    return this.supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          first_name: firstName,
+          last_name: lastName
+        }
+      }
+    });
+  }
+
   getUser() {
     return this.supabase.auth.getUser();
+  }
+
+  getSession() {
+    return this.supabase.auth.getSession();
+  }
+
+  onAuthStateChange(callback: any) {
+    const { data } = this.supabase.auth.onAuthStateChange(callback);
+    return data.subscription;
+  }
+
+  async getSessionUser() {
+    const { data } = await this.supabase.auth.getUser();
+    return data.user;
   }
 
   // TASKS
