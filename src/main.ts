@@ -1,10 +1,10 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { TasktrekComponent } from './app/pages/tasktrek/tasktrek.component';
+import { AppComponent } from './app/app.component';
 import { importProvidersFrom } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-bootstrapApplication(TasktrekComponent, {
+bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(CommonModule, FormsModule)
   ]
