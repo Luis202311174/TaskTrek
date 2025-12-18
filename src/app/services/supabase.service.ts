@@ -62,8 +62,15 @@ export class SupabaseService {
     return this.supabase.rpc('create_task', data);
   }
 
-  updateTask(data: any) {
-    return this.supabase.rpc('update_task', data);
+  updateTask(
+    table: string,
+    taskId: string,
+    updates: any
+  ) {
+    return this.supabase
+      .from(table)
+      .update(updates)
+      .eq('id', taskId);
   }
 
   deleteTask(table: string, taskId: string, userId: string) {

@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { isPlatformBrowser } from '@angular/common';
 import { SupabaseService } from '../../services/supabase.service';
 
 
@@ -16,6 +15,7 @@ export class TasktrekComponent implements OnInit, OnDestroy {
   userId = '';
   userName = '';
   tasks: any[] = [];
+  editingTask: any | null = null;
 
   private authListener: { unsubscribe: () => void } | null = null;
 
@@ -39,12 +39,24 @@ export class TasktrekComponent implements OnInit, OnDestroy {
     p_due_date: ''
   };
 
+  resetForm() {
+    this.task = {
+      p_table_name: 'assignments',
+      p_user_id: this.userId,
+      p_title: '',
+      p_description: '',
+      p_priority: 'medium',
+      p_subj_course: '',
+      p_due_date: ''
+    };
+  }
+
   constructor(private supabase: SupabaseService) {}
   
   async ngOnInit() {
     try {
       const { data } = await this.supabase.getSession();
-      console.log('Session data', data); // check if this runs
+      console.log('Session data', data);
       if (data.session?.user) {
         this.setUser(data.session.user);
         this.loadTasks();
@@ -52,7 +64,7 @@ export class TasktrekComponent implements OnInit, OnDestroy {
 
       this.authListener = this.supabase.onAuthStateChange(
         (_event: any, session: any) => {
-          console.log('Auth change', session); // log every auth event
+          console.log('Auth change', session);
           if (session?.user) {
             this.setUser(session.user);
             this.showLogin = false;
@@ -159,15 +171,75 @@ export class TasktrekComponent implements OnInit, OnDestroy {
     }
 
     await this.loadTasks();
+    this.resetForm();
+  }
+
+  startEdit(task: any) {
+    console.log('EDIT TASK OBJECT:', task);
+    this.editingTask = task;
+
+    this.task = {
+      p_table_name: task.table_name,
+      p_user_id: this.userId,
+      p_title: task.task_title,
+      p_description: task.task_description,
+      p_priority: task.task_priority.toLowerCase().includes('high')
+        ? 'high'
+        : task.task_priority.toLowerCase().includes('low')
+        ? 'low'
+        : 'medium',
+      p_subj_course: task.task_subj_course,
+      p_due_date: task.task_due_date
+    };
+  }
+
+  async updateTask() {
+    if (!this.editingTask?.task_id) {
+      console.error('Missing task_id', this.editingTask);
+      return;
+    }
+
+    const updates = {
+      title: this.task.p_title,
+      description: this.task.p_description || null,
+      priority:
+        this.task.p_priority === 'high'
+          ? 'High Priority'
+          : this.task.p_priority === 'low'
+          ? 'Low Priority'
+          : 'Medium Priority',
+      subj_course: this.task.p_subj_course || null,
+      due_date: this.task.p_due_date || null
+    };
+
+    const { error } = await this.supabase.updateTask(
+      this.editingTask.table_name,
+      this.editingTask.task_id,
+      updates
+    );
+
+    if (error) {
+      console.error('failed to update task', error);
+      return;
+    }
+
+    this.editingTask = null;
+    this.resetForm();
+    await this.loadTasks();
   }
 
   async deleteTask(task: any) {
+    if (!task.task_id) {
+      console.error('Missing task_id', task);
+      return;
+    }
+
     await this.supabase.deleteTask(
       task.table_name,
-      task.id,
+      task.task_id,
       this.userId
     );
-    this.loadTasks();
+
     await this.loadTasks();
   }
 }

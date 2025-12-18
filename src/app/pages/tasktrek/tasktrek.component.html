@@ -1,15 +1,12 @@
 <div class="min-h-screen bg-gray-100 flex flex-col items-center p-4">
 
-  <!--Title--> -->
   <h2 class="text-3xl font-bold text-indigo-600 mb-4">TaskTrek</h2>
 
-  <!-- Auth Buttons -->
   <div *ngIf="!userId" class="space-x-2 mb-4">
     <button (click)="showLogin = true" class="px-3 py-1 bg-indigo-500 text-white rounded">Login</button>
     <button (click)="showSignup = true" class="px-3 py-1 bg-green-500 text-white rounded">Sign Up</button>
   </div>
 
-  <!-- Sign Up Form -->
   <div *ngIf="showSignup" class="bg-white rounded p-4 w-full max-w-sm space-y-2">
     <h3 class="text-xl font-semibold">Sign Up</h3>
     <input class="w-full border px-2 py-1 rounded" placeholder="First Name" [(ngModel)]="firstName" />
@@ -22,7 +19,6 @@
     </div>
   </div>
 
-  <!-- Login Form -->
   <div *ngIf="showLogin" class="bg-white rounded p-4 w-full max-w-sm space-y-2">
     <h3 class="text-xl font-semibold">Login</h3>
     <input class="w-full border px-2 py-1 rounded" placeholder="Email" [(ngModel)]="email" />
@@ -33,16 +29,13 @@
     </div>
   </div>
 
-  <!-- Task Manager -->
   <div *ngIf="userId" class="w-full max-w-md bg-white rounded p-4 mt-4 space-y-2">
 
-    <!-- User Info -->
     <div class="flex justify-between items-center mb-2">
       <span class="font-semibold">{{ userName }}</span>
       <button (click)="logout()" class="px-2 py-1 bg-red-500 text-white rounded">Logout</button>
     </div>
 
-    <!-- Add Task Form -->
     <div class="space-y-2">
       <select [(ngModel)]="task.p_table_name" class="w-full border px-2 py-1 rounded">
         <option value="assignments">Assignment</option>
@@ -59,18 +52,29 @@
         <option value="Medium Priority">Medium</option>
         <option value="High Priority">High</option>
       </select>
-      <button (click)="addTask()" class="w-full px-3 py-1 bg-indigo-500 text-white rounded">Add Task</button>
+      <button *ngIf="!editingTask" (click)="addTask()" class="w-full px-3 py-1 bg-indigo-500 text-white rounded">Add Task</button>
+      <button *ngIf="editingTask" (click)="updateTask()" class="w-full px-3 py-1 bg-green-500 text-white rounded">Update Task</button>
     </div>
 
     <hr class="border-gray-300" />
 
-    <!-- Task List -->
-    <div *ngFor="let t of tasks" class="p-2 border border-gray-200 rounded mb-2">
-      <strong>{{ t.task_title }}</strong> <small>({{ t.table_name }})</small><br />
+    <div *ngFor="let t of tasks" class="p-3 border border-gray-200 rounded mb-2">
+      <strong>{{ t.task_title }}</strong>
+      <small class="text-gray-500">({{ t.table_name }})</small><br />
       <span>{{ t.task_subj_course }}</span><br />
       <span>{{ t.task_description }}</span><br />
       <span>Priority: {{ t.task_priority }}</span><br />
       <span>Due: {{ t.task_due_date }}</span>
+
+      <div class="flex gap-2 mt-2">
+        <button
+          (click)="startEdit(t)"
+          class="px-2 py-1 bg-yellow-400 text-white rounded text-sm">Edit</button>
+
+        <button
+          (click)="deleteTask(t)"
+          class="px-2 py-1 bg-red-500 text-white rounded text-sm">Delete</button>
+      </div>
     </div>
 
   </div>
