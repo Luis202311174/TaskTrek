@@ -15,7 +15,6 @@ export class SupabaseService {
     );
   }
 
-  // AUTH
   signIn(email: string, password: string) {
     return this.supabase.auth.signInWithPassword({ email, password });
   }
@@ -51,7 +50,6 @@ export class SupabaseService {
     return data.user;
   }
 
-  // TASKS
   fetchTasks(userId: string) {
     return this.supabase.rpc('fetch_user_tasks', {
       p_user_id: userId
