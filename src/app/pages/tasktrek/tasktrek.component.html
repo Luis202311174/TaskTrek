@@ -1,63 +1,77 @@
-<h2>TaskTrek</h2>
+<div class="min-h-screen bg-gray-100 flex flex-col items-center p-4">
 
-  <div *ngIf="!userId">
-    <button (click)="showLogin = true">Login</button>
-    <button (click)="showSignup = true">Sign Up</button>
+  <!--Title--> -->
+  <h2 class="text-3xl font-bold text-indigo-600 mb-4">TaskTrek</h2>
+
+  <!-- Auth Buttons -->
+  <div *ngIf="!userId" class="space-x-2 mb-4">
+    <button (click)="showLogin = true" class="px-3 py-1 bg-indigo-500 text-white rounded">Login</button>
+    <button (click)="showSignup = true" class="px-3 py-1 bg-green-500 text-white rounded">Sign Up</button>
   </div>
 
-  <div *ngIf="showSignup">
-    <h3>Sign Up</h3>
-    <input placeholder="First Name" [(ngModel)]="firstName" />
-    <input placeholder="Last Name" [(ngModel)]="lastName" />
-    <input placeholder="Email" [(ngModel)]="signupEmail" />
-    <input type="password" placeholder="Password" [(ngModel)]="signupPassword" />
-    <button (click)="signup()">Create Account</button>
-    <button (click)="showSignup = false">Cancel</button>
+  <!-- Sign Up Form -->
+  <div *ngIf="showSignup" class="bg-white rounded p-4 w-full max-w-sm space-y-2">
+    <h3 class="text-xl font-semibold">Sign Up</h3>
+    <input class="w-full border px-2 py-1 rounded" placeholder="First Name" [(ngModel)]="firstName" />
+    <input class="w-full border px-2 py-1 rounded" placeholder="Last Name" [(ngModel)]="lastName" />
+    <input class="w-full border px-2 py-1 rounded" placeholder="Email" [(ngModel)]="signupEmail" />
+    <input class="w-full border px-2 py-1 rounded" type="password" placeholder="Password" [(ngModel)]="signupPassword" />
+    <div class="flex justify-between">
+      <button (click)="signup()" class="px-3 py-1 bg-green-500 text-white rounded">Create</button>
+      <button (click)="showSignup = false" class="px-3 py-1 bg-gray-300 rounded">Cancel</button>
+    </div>
   </div>
 
-  <div *ngIf="showLogin">
-    <h3>Login</h3>
-    <input placeholder="Email" [(ngModel)]="email" />
-    <input type="password" placeholder="Password" [(ngModel)]="password" />
-    <button (click)="login()">Login</button>
-    <button (click)="showLogin = false">Cancel</button>
+  <!-- Login Form -->
+  <div *ngIf="showLogin" class="bg-white rounded p-4 w-full max-w-sm space-y-2">
+    <h3 class="text-xl font-semibold">Login</h3>
+    <input class="w-full border px-2 py-1 rounded" placeholder="Email" [(ngModel)]="email" />
+    <input class="w-full border px-2 py-1 rounded" type="password" placeholder="Password" [(ngModel)]="password" />
+    <div class="flex justify-between">
+      <button (click)="login()" class="px-3 py-1 bg-indigo-500 text-white rounded">Login</button>
+      <button (click)="showLogin = false" class="px-3 py-1 bg-gray-300 rounded">Cancel</button>
+    </div>
   </div>
 
-<div *ngIf="userId">
+  <!-- Task Manager -->
+  <div *ngIf="userId" class="w-full max-w-md bg-white rounded p-4 mt-4 space-y-2">
 
-  <div *ngIf="userId">
-    <span>{{ userName }}</span>
-    <button (click)="logout()">Logout</button>
+    <!-- User Info -->
+    <div class="flex justify-between items-center mb-2">
+      <span class="font-semibold">{{ userName }}</span>
+      <button (click)="logout()" class="px-2 py-1 bg-red-500 text-white rounded">Logout</button>
+    </div>
+
+    <!-- Add Task Form -->
+    <div class="space-y-2">
+      <select [(ngModel)]="task.p_table_name" class="w-full border px-2 py-1 rounded">
+        <option value="assignments">Assignment</option>
+        <option value="exams">Exam</option>
+        <option value="group_projects">Group Project</option>
+        <option value="personal_goals">Personal Goal</option>
+      </select>
+      <input class="w-full border px-2 py-1 rounded" placeholder="Title" [(ngModel)]="task.p_title" />
+      <input class="w-full border px-2 py-1 rounded" placeholder="Course" [(ngModel)]="task.p_subj_course" />
+      <input class="w-full border px-2 py-1 rounded" placeholder="Description" [(ngModel)]="task.p_description" />
+      <input class="w-full border px-2 py-1 rounded" type="date" [(ngModel)]="task.p_due_date" />
+      <select [(ngModel)]="task.p_priority" class="w-full border px-2 py-1 rounded">
+        <option value="Low Priority">Low</option>
+        <option value="Medium Priority">Medium</option>
+        <option value="High Priority">High</option>
+      </select>
+      <button (click)="addTask()" class="w-full px-3 py-1 bg-indigo-500 text-white rounded">Add Task</button>
+    </div>
+
+    <hr class="border-gray-300" />
+
+    <!-- Task List -->
+    <div *ngFor="let t of tasks" class="p-2 border border-gray-200 rounded mb-2">
+      <strong>{{ t.task_title }}</strong> <small>({{ t.table_name }})</small><br />
+      <span>{{ t.task_subj_course }}</span><br />
+      <span>{{ t.task_description }}</span><br />
+      <span>Priority: {{ t.task_priority }}</span><br />
+      <span>Due: {{ t.task_due_date }}</span>
+    </div>
+
   </div>
-
-  <select [(ngModel)]="task.p_table_name">
-    <option value="assignments">Assignment</option>
-    <option value="exams">Exam</option>
-    <option value="group_projects">Group Project</option>
-    <option value="personal_goals">Personal Goal</option>
-  </select>
-
-  <input placeholder="Title" [(ngModel)]="task.p_title" />
-  <input placeholder="Course" [(ngModel)]="task.p_subj_course" />
-  <input placeholder="Description" [(ngModel)]="task.p_description" />
-  <input type="date" [(ngModel)]="task.p_due_date" />
-  <select [(ngModel)]="task.p_priority">
-    <option value="Low Priority">Low Priority</option>
-    <option value="Medium Priority">Medium Priority</option>
-    <option value="High Priority">High Priority</option>
-  </select>
-  <button (click)="addTask()">Add</button>
-
-  <hr />
-
-  <div *ngFor="let t of tasks">
-    <strong>{{ t.task_title }}</strong>
-    <small>({{ t.table_name }})</small><br />
-    <span>{{ t.task_subj_course }}</span><br />
-    <span>{{ t.task_description }}</span><br />
-    <span>Priority: {{ t.task_priority }}</span><br />
-    <span>Due: {{ t.task_due_date }}</span><br />
-    <hr />
-  </div>
-
 </div>

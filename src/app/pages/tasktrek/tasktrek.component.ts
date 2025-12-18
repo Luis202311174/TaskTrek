@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { SupabaseService } from '../../services/supabase.service';
 
+
 @Component({
   selector: 'app-tasktrek',
   standalone: true,
