@@ -1,23 +1,8 @@
-<div *ngIf="userId">
-
-  <h2>TaskTrek</h2>
+<h2>TaskTrek</h2>
 
   <div *ngIf="!userId">
     <button (click)="showLogin = true">Login</button>
     <button (click)="showSignup = true">Sign Up</button>
-  </div>
-
-  <div *ngIf="userId">
-    <span>{{ userName }}</span>
-    <button (click)="logout()">Logout</button>
-  </div>
-
-  <div *ngIf="showLogin">
-    <h3>Login</h3>
-    <input placeholder="Email" [(ngModel)]="email" />
-    <input type="password" placeholder="Password" [(ngModel)]="password" />
-    <button (click)="login()">Login</button>
-    <button (click)="showLogin = false">Cancel</button>
   </div>
 
   <div *ngIf="showSignup">
@@ -28,6 +13,21 @@
     <input type="password" placeholder="Password" [(ngModel)]="signupPassword" />
     <button (click)="signup()">Create Account</button>
     <button (click)="showSignup = false">Cancel</button>
+  </div>
+
+  <div *ngIf="showLogin">
+    <h3>Login</h3>
+    <input placeholder="Email" [(ngModel)]="email" />
+    <input type="password" placeholder="Password" [(ngModel)]="password" />
+    <button (click)="login()">Login</button>
+    <button (click)="showLogin = false">Cancel</button>
+  </div>
+
+<div *ngIf="userId">
+
+  <div *ngIf="userId">
+    <span>{{ userName }}</span>
+    <button (click)="logout()">Logout</button>
   </div>
 
   <select [(ngModel)]="task.p_table_name">

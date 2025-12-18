@@ -8,7 +8,7 @@ import { SupabaseService } from '../../services/supabase.service';
   selector: 'app-tasktrek',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './tasktrek.component.html'
+  templateUrl: './tasktrek.component.html',
 })
 export class TasktrekComponent implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
@@ -41,28 +41,30 @@ export class TasktrekComponent implements OnInit, OnDestroy {
   constructor(private supabase: SupabaseService) {}
   
   async ngOnInit() {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
-    const { data } = await this.supabase.getSession();
-    if (data.session?.user) {
-      this.setUser(data.session.user);
-      this.loadTasks();
-    }
-
-    this.authListener = this.supabase.onAuthStateChange(
-      (_event: any, session: any) => {
-        if (session?.user) {
-          this.setUser(session.user);
-          this.showLogin = false;
-          this.showSignup = false;
-          this.loadTasks();
-        } else {
-          this.clearUser();
-        }
+    try {
+      const { data } = await this.supabase.getSession();
+      console.log('Session data', data); // check if this runs
+      if (data.session?.user) {
+        this.setUser(data.session.user);
+        this.loadTasks();
       }
-    );
+
+      this.authListener = this.supabase.onAuthStateChange(
+        (_event: any, session: any) => {
+          console.log('Auth change', session); // log every auth event
+          if (session?.user) {
+            this.setUser(session.user);
+            this.showLogin = false;
+            this.showSignup = false;
+            this.loadTasks();
+          } else {
+            this.clearUser();
+          }
+        }
+      );
+    } catch (err) {
+      console.error('ngOnInit error', err);
+    }
   }
 
   ngOnDestroy() {

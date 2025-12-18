@@ -1,11 +1,10 @@
-// app.component.ts
 import { Component } from '@angular/core';
-import { TasktrekComponent } from './pages/tasktrek/tasktrek.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [TasktrekComponent], // <-- import the standalone component here
-  templateUrl: './app.component.html'
+  imports: [RouterOutlet],
+  template: `<router-outlet></router-outlet>`
 })
 export class AppComponent {}
